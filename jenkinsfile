@@ -1,21 +1,19 @@
 pipeline {
     agent any 
-
-    stages {
-        stage('Checkout') {
+    stages{
+        stage("Checkout"){
             steps {
-                // Checkout the code from the repository
                 checkout scm
             }
         }
-        stage('Test') {
-            steps {
-                // Run your tests here
-                sh 'sudo apt install npm'
+
+        stage("Test") {
+            steps{
+                sh 'sudo npm install'
                 sh 'npm test'
             }
         }
-        stage('Build') {
+        stage("Build") {
             steps {
                 // Build your project here
                 sh 'npm run build'
