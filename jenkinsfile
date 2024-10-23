@@ -1,84 +1,51 @@
-pipeline{
-
+pipeline {
     agent any 
 
-    stages{
-
-        stage("checkout"){
-
-            steps{
-
-                checkout scm
-
-            }
-
-        }
- 
-     
- 
-        stage("Test"){
-
-            steps{
-
-                sh 'npm install'
-
-                sh 'npm test'
-
-            }
-
-        }
- 
-        stage("Build"){
-
-            steps{
-
-                sh 'npm run build'
-
-            }
-
-        }
- 
-        stage("Build Image" ){
-
-            steps{
-
-                sh 'docker build -t my-node-app .'
-
-            }
-
-         stage("Login to DockerHub") {
-
+    stages {
+        stage("Checkout") {
             steps {
-
-                script {
-
-                    // Login to DockerHub
-
-                    def dockerhub_creds = credentials('dockerhub_credentials')
-
-                    sh "echo ${dockerhub_creds.password} | docker login -u ${dockerhub_creds.username} --password-stdin"
-
-                }
-
+                checkout scm
             }
-
         }
- 
+
+        stage("Test") {
+            steps {
+                sh 'npm install'
+                sh 'npm test'
+            }
+        }
+
+        stage("Build") {
+            steps {
+                sh 'npm run build'
+            }
+        }
+
+        stage("Build Image") {
+            steps {
+                sh 'docker build -t my-node-app .'
+            }
+        }
+
+        stage("Login to DockerHub") {
+            steps {
+                script {
+                    // Login to DockerHub
+                    def dockerhub_creds = credentials('dockerhub_credentials')
+                    sh "echo ${dockerhub_creds.password} | docker login -u ${dockerhub_creds.username} --password-stdin"
+                }
+            }
+        }
+
         stage("Push Image") {
-    steps {
-        script {
-            // Tag the image with the correct repository
-            sh 'docker tag my-node-app:latest arpitimg/jenkinsassign1:latest'
-            // Push the image to DockerHub
-            sh 'docker push arpitimg/jenkinsassign1:latest'
+            steps {
+                script {
+                    // Tag the image with the correct repository
+                    sh 'docker tag my-node-app:latest arpitimg/jenkinsassign1:latest'
+                    // Push the image to DockerHub
+                    sh 'docker push arpitimg/jenkinsassign1:latest'
+                }
+            }
         }
     }
 }
-
-
-        }
-
-    }
-
-}
- 
