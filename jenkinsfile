@@ -65,16 +65,16 @@ pipeline{
         }
  
         stage("Push Image") {
-
-            steps {
-
-               sh 'docker tag my-node-app:1.0 arpitimg/jenkinsassign1'
-
-                sh 'docker push pushpanjay/my-node-app'
-
-            }
-
+    steps {
+        script {
+            // Tag the image with the correct repository
+            sh 'docker tag my-node-app:latest arpitimg/jenkinsassign1:latest'
+            // Push the image to DockerHub
+            sh 'docker push arpitimg/jenkinsassign1:latest'
         }
+    }
+}
+
 
         }
 
