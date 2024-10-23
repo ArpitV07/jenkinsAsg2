@@ -1,83 +1,47 @@
-pipeline{
-
+pipeline {
     agent any 
 
-    stages{
-
-        stage("checkout"){
-
-            steps{
-
+    stages {
+        stage("Checkout") {
+            steps {
                 checkout scm
-
             }
-
         }
- 
-     
- 
-        stage("Test"){
 
-            steps{
-
-                sh 'npm install'
-
-                sh 'npm test'
-
+        stage("Test") {
+            steps {
+                sh 'npm install' // Install npm dependencies
+                sh 'npm test'    // Run tests
             }
-
         }
- 
-        stage("Build"){
 
-            steps{
-
-                sh 'npm run build'
-
+        stage("Build") {
+            steps {
+                sh 'npm run build' // Build the project
             }
-
         }
- 
-        stage("Build Image" ){
 
-            steps{
-
+        stage("Build Image") {
+            steps {
                 sh 'docker build -t my-node-app .'
-
             }
+        }
 
-         stage("Login to DockerHub") {
-
+        stage("Login to DockerHub") {
             steps {
-
                 script {
-
                     // Login to DockerHub
-
                     def dockerhub_creds = credentials('dockerhub_credentials')
-
                     sh "echo ${dockerhub_creds.password} | docker login -u ${dockerhub_creds.username} --password-stdin"
-
                 }
-
             }
-
         }
- 
+
         stage("Push Image") {
-
             steps {
-
-               sh 'docker tag my-node-app:1.0 arpitimg/jenkinsassign1:1.0'
-
-                sh 'docker push arpitimg/jenkinsassign1'
+                sh 'docker tag my-node-app:latest arpitimg/jenkinsassign1:latest'
+                sh 'docker push arpitimg/jenkinsassign1:latest'
             }
-
         }
-
-        }
-
     }
-
 }
- 
