@@ -8,43 +8,21 @@ pipeline {
             }
         }
 
+        stage("Install Dependencies") {
+            steps {
+                sh 'npm install' // Install npm dependencies
+            }
+        }
+
         stage("Test") {
             steps {
-                sh 'npm install'
-                sh 'npm test'
+                sh 'npm test' // Run tests
             }
         }
 
         stage("Build") {
             steps {
-                sh 'npm run build'
-            }
-        }
-
-        stage("Build Image") {
-            steps {
-                sh 'docker build -t my-node-app .'
-            }
-        }
-
-        stage("Login to DockerHub") {
-            steps {
-                script {
-                    // Login to DockerHub
-                    def dockerhub_creds = credentials('dockerhub_credentials')
-                    sh "echo ${dockerhub_creds.password} | docker login -u ${dockerhub_creds.username} --password-stdin"
-                }
-            }
-        }
-
-        stage("Push Image") {
-            steps {
-                script {
-                    // Tag the image with the correct repository
-                    sh 'docker tag my-node-app:latest arpitimg/jenkinsassign1:latest'
-                    // Push the image to DockerHub
-                    sh 'docker push arpitimg/jenkinsassign1:latest'
-                }
+                sh 'npm run build' // Build the project
             }
         }
     }
