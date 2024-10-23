@@ -1,0 +1,24 @@
+pipeline {
+    agent any 
+
+    stages {
+        stage('Checkout') {
+            steps {
+                // Checkout the code from the repository
+                git 'git@github.com:YourUsername/YourRepository.git'
+            }
+        }
+        stage('Test') {
+            steps {
+                // Run your tests here
+                sh 'mvn test' // Adjust this command based on your testing framework
+            }
+        }
+        stage('Build') {
+            steps {
+                // Build your project here
+                sh 'mvn clean package' // Adjust this command as necessary
+            }
+        }
+    }
+}
