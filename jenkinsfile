@@ -39,7 +39,7 @@ pipeline {
  
         stage("Push Image") {
             steps {
-                sh 'docker tag my-node-app:1.0 arpitimg/jenkinsassign1:1.0'
+                sh 'docker tag jenkinsassign1:1.0 arpitimg/jenkinsassign1:1.0'
                 sh 'docker push arpitimg/jenkinsassign1:1.0'
             }
         }
