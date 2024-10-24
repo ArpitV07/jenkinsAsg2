@@ -25,5 +25,23 @@ pipeline {
                 sh 'npm run build' // Build the project
             }
         }
+
+        stage("Login to DockerHub") {
+            steps {
+                script {
+            // Login to DockerHub
+                  withCredentials([usernamePassword(credentialsId: 'dockerhub_credential', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                  sh "echo \$DOCKER_PASSWORD | docker login -u \$DOCKER_USERNAME --password-stdin"
+                }
+            }
+            }
+        }
+ 
+        stage("Push Image") {
+            steps {
+                sh 'docker tag my-node-app:1.0 pushpanjay/my-node-app:1.0'
+                sh 'docker push pushpanjay/my-node-app:1.0'
+            }
+        }
     }
 }
